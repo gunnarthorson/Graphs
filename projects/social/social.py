@@ -1,3 +1,6 @@
+import random
+import collections
+
 class User:
     def __init__(self, name):
         self.name = name
@@ -45,8 +48,16 @@ class SocialGraph:
         # !!!! IMPLEMENT ME
 
         # Add users
+        for i in range(num_users):
+            self.add_user(f"User {i}")
 
         # Create friendships
+        possible_friendships = []
+
+        for user_id in self.users:
+            for friend_id in range(user_id + 1, self.last_id + 1):
+                possible_friendships.append((user_id, friend_id))
+
 
     def get_all_social_paths(self, user_id):
         """
@@ -59,6 +70,23 @@ class SocialGraph:
         """
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
+        queue = collections.deque([])
+        queue.append([user_id])
+
+        visited.setdefault(user_id, [user_id])
+        while queue:
+
+            connections = queue.popleft()
+            person = connections[-1]
+            for friend in self.friendships[person]:
+
+                if friend not in visited:
+
+                    shortest = list(connections)
+                    shortest.append(friend)
+                    visited[friend] = shortest
+                    queue.append(shortest)
+
         return visited
 
 
